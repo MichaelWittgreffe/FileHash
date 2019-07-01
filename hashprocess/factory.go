@@ -1,22 +1,27 @@
 package hashprocess
 
+import (
+	"crypto/md5"
+	"crypto/sha1"
+	"crypto/sha256"
+	"crypto/sha512"
+)
+
 //SupportedTypes is a simple array of lower-case string hash function names (eg: "md5")
 var SupportedTypes = [4]string{"md5", "sha1", "sha256", "sha512"}
 
-//GetHashFunction returns a hash function for the given hash type
-func GetHashFunction(filepath, hashFuncType string) *HashProcessor {
-	var result HashProcessor
-
+//GetHashProcessor returns a hash function for the given hash type
+func GetHashProcessor(filepath, hashFuncType string) *HashProcessor {
 	switch {
 	case hashFuncType == "md5":
-		result = &MD5Processor{filepath: filepath}
+		return &HashProcessor{filepath: filepath, hasher: md5.New()}
 	case hashFuncType == "sha1":
-		result = &SHA1Processor{filepath: filepath}
+		return &HashProcessor{filepath: filepath, hasher: sha1.New()}
 	case hashFuncType == "sha256":
-		result = &SHA256Processor{filepath: filepath}
+		return &HashProcessor{filepath: filepath, hasher: sha256.New()}
 	case hashFuncType == "sha512":
-		result = &SHA512Processor{filepath: filepath}
+		return &HashProcessor{filepath: filepath, hasher: sha512.New()}
+	default:
+		return nil
 	}
-
-	return &result
 }
