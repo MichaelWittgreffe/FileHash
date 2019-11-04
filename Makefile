@@ -26,6 +26,7 @@ success:
 
 failure:
 	printf "\n\e[1;31mBuild Failure\e[0m\n" 
+	exit 1
 
 create-dir:
 	if ! [ -d ./bin ]; then mkdir bin; fi;
