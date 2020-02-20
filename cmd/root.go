@@ -9,10 +9,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//---------------------------------------
-// Define CLI
-//---------------------------------------
-
 var rootCmd = &cobra.Command{
 	Use:   "app [filename] [hash function]",
 	Short: "Hash A File",
@@ -29,40 +25,44 @@ func Execute() {
 	}
 }
 
-//---------------------------------------
-// Define Handler Functions
-//---------------------------------------
-
 func rootCmdHandler(cmd *cobra.Command, args []string) {
-	if path, err := os.Getwd(); err == nil {
-		filename := args[0]
-		function := args[1]
-
-		if len(filename) > 0 {
-			filepath := path + "/" + filename
-
-			//default hash func is MD5
-			if len(function) == 0 {
-				function = "md5"
-			}
-
-			if _, err := os.Stat(filepath); err == nil {
-				hashProcessor := hashprocess.GetHashProcessor(filepath, strings.ToLower(function))
-
-				if hashProcessor != nil {
-					if hash, err := hashProcessor.Process(); err == nil {
-						fmt.Println(filename + ": " + hash)
-					} else {
-						fmt.Println("Error Hashing File: " + err.Error())
-					}
-				} else {
-					fmt.Println("Hash Function Not Supported")
-				}
-			} else {
-				fmt.Println("File Not Found")
-			}
-		} else {
-			fmt.Println("Filename Param Not Given")
-		}
+	path, err := os.Getwd()
+	if err != nil {
+		fmt.Println("Error Getting Working Directory")
+		return
 	}
+
+	if len(args) == 0 {
+		fmt.Println("Filename Param Not Given")
+		return
+	}
+
+	filename := args[0]
+	filepath := path + "/" + filename
+	var function string
+
+	if len(args) == 2 {
+		function = args[1]
+	} else {
+		function = "md5"
+	}
+
+	_, err = os.Stat(filepath)
+	if err != nil {
+		fmt.Println("File Not Found")
+		return
+	}
+
+	hashProcessor := hashprocess.GetHashProcessor(filepath, strings.ToLower(function))
+	if hashProcessor == nil {
+		fmt.Println("Hash Function Not Supported")
+		return
+	}
+
+	hash, err := hashProcessor.Process()
+	if err != nil {
+		fmt.Printf("Error Hashing File: %s\n", err.Error())
+	}
+
+	fmt.Println(filename + ": " + hash)
 }

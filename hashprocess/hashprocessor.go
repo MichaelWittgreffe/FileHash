@@ -3,6 +3,7 @@ package hashprocess
 import (
 	"encoding/hex"
 	"errors"
+	"fmt"
 	"hash"
 	"io"
 	"os"
@@ -16,20 +17,24 @@ type HashProcessor struct {
 
 //Process performs a hash function on the given filepath and returns the hash
 func (p *HashProcessor) Process() (string, error) {
-	var err error
-	result := ""
-
-	if len(p.filepath) > 0 {
-		if file, err := os.Open(p.filepath); err == nil {
-			if _, err = io.Copy(p.hasher, file); err == nil {
-				if hashBytes := p.hasher.Sum(nil); len(hashBytes) > 0 {
-					result = hex.EncodeToString(hashBytes)
-				}
-			}
-		}
-	} else {
-		err = errors.New("Filepath To Hash Function Is Empty")
+	if len(p.filepath) <= 0 {
+		return "", errors.New("Filepath to Hash Function Is Empty")
 	}
 
-	return result, err
+	file, err := os.Open(p.filepath)
+	if err != nil {
+		return "", fmt.Errorf("Unable To Open File %s: %s", p.filepath, err.Error())
+	}
+
+	_, err = io.Copy(p.hasher, file)
+	if err != nil {
+		return "", err
+	}
+
+	hashBytes := p.hasher.Sum(nil)
+	if len(hashBytes) <= 0 {
+		return "", fmt.Errorf("hasher.Sum Is Nil")
+	}
+
+	return hex.EncodeToString(hashBytes), nil
 }

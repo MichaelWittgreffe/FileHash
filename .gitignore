@@ -13,3 +13,5 @@
 
 # project specific
 bin
+coverage.*
+test-file-1.txt
