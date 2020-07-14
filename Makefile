@@ -1,5 +1,4 @@
 APPLICATION_NAME = filehash
-APPLICATION_PUBLISHER = michaelwittgreffe
 
 all:
 	@$(MAKE) clean create-dir install test build success || $(MAKE) failure

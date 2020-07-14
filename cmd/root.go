@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/MichaelWittgreffe/FileHash/hashprocess"
 	"github.com/spf13/cobra"
@@ -38,13 +37,11 @@ func rootCmdHandler(cmd *cobra.Command, args []string) {
 	}
 
 	filename := args[0]
-	filepath := path + "/" + filename
-	var function string
+	filepath := fmt.Sprintf("%s/%s", path, filename)
+	hashFunction := "md5"
 
 	if len(args) == 2 {
-		function = args[1]
-	} else {
-		function = "md5"
+		hashFunction = args[1]
 	}
 
 	_, err = os.Stat(filepath)
@@ -53,7 +50,7 @@ func rootCmdHandler(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	hashProcessor := hashprocess.GetHashProcessor(filepath, strings.ToLower(function))
+	hashProcessor := hashprocess.GetHashProcessor(filepath, hashFunction)
 	if hashProcessor == nil {
 		fmt.Println("Hash Function Not Supported")
 		return

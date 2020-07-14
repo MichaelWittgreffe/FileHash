@@ -18,7 +18,7 @@ type HashProcessor struct {
 //Process performs a hash function on the given filepath and returns the hash
 func (p *HashProcessor) Process() (string, error) {
 	if len(p.filepath) <= 0 {
-		return "", errors.New("Filepath to Hash Function Is Empty")
+		return "", errors.New("Filepath Is Empty")
 	}
 
 	file, err := os.Open(p.filepath)

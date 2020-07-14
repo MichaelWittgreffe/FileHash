@@ -6,14 +6,18 @@ import (
 	"crypto/sha256"
 	"crypto/sha512"
 	"hash"
+	"strings"
 )
-
-//SupportedTypes is a simple array of lower-case string hash function names (eg: "md5")
-var SupportedTypes = [4]string{"md5", "sha1", "sha256", "sha512"}
 
 //GetHashProcessor returns a hash function for the given hash type
 func GetHashProcessor(filepath, hashFuncType string) *HashProcessor {
 	var hasher hash.Hash
+
+	if len(hashFuncType) == 0 {
+		return nil
+	}
+
+	hashFuncType = strings.ToLower(hashFuncType)
 
 	switch {
 	case hashFuncType == "md5":
