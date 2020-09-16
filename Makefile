@@ -5,7 +5,7 @@ all:
 	@$(MAKE) clean create-dir install test build success || $(MAKE) failure
 
 build:
-	go build -o bin/${APPLICATION_NAME} -v
+	GOOS=linux go build -o bin/${APPLICATION_NAME} -v cmd/${APPLICATION_NAME}.go
 
 ide-build:
 	@$(MAKE) build success || $(MAKE) failure
@@ -25,7 +25,8 @@ test:
 	go tool cover -html=coverage.out -o coverage.html
 
 install:
-	if [ ! -d "${GOPATH}/src/gopkg.in/yaml.v2" ]; then go get -u github.com/spf13/cobra/cobra; fi;
+	go mod tidy
+	go mod download
 
 success:
 	printf "\n\e[1;32mBuild Successful\e[0m\n"

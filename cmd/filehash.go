@@ -1,11 +1,11 @@
-package cmd
+package main
 
 import (
 	"fmt"
 	"os"
 	"strings"
 
-	"github.com/MichaelWittgreffe/FileHash/hashprocess"
+	"github.com/MichaelWittgreffe/FileHash/pkg/hashprocess"
 	"github.com/spf13/cobra"
 )
 
@@ -17,8 +17,7 @@ var rootCmd = &cobra.Command{
 	Run:   rootCmdHandler,
 }
 
-//Execute runs the cli app
-func Execute() {
+func main() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -53,16 +52,16 @@ func rootCmdHandler(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	hashProcessor := hashprocess.GetHashProcessor(filepath, strings.ToLower(function))
+	hashProcessor := hashprocess.NewHashProcessor(strings.ToLower(function))
 	if hashProcessor == nil {
 		fmt.Println("Hash Function Not Supported")
 		return
 	}
 
-	hash, err := hashProcessor.Process()
+	hash, err := hashProcessor.Process(filepath)
 	if err != nil {
 		fmt.Printf("Error Hashing File: %s\n", err.Error())
 	}
 
-	fmt.Println(filename + ": " + hash)
+	fmt.Printf("%s: %s", filename, hash)
 }

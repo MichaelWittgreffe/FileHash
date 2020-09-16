@@ -6,9 +6,9 @@
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "${workspaceFolder}/filehash.go",
+            "program": "${workspaceFolder}/cmd/filehash.go",
             "env": {},
-            "args": ["test-file-1.txt", "md5"]
+            "args": ["../test-file-1.txt", "md5"]
         }
     ]
 }
