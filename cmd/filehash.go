@@ -37,13 +37,11 @@ func rootCmdHandler(cmd *cobra.Command, args []string) {
 	}
 
 	filename := args[0]
-	filepath := path + "/" + filename
-	var function string
+	filepath := fmt.Sprintf("%s/%s", path, filename)
+	hashFunction := "md5"
 
 	if len(args) == 2 {
-		function = args[1]
-	} else {
-		function = "md5"
+		hashFunction = args[1]
 	}
 
 	_, err = os.Stat(filepath)
@@ -52,7 +50,7 @@ func rootCmdHandler(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	hashProcessor := hashprocess.NewHashProcessor(strings.ToLower(function))
+	hashProcessor := hashprocess.NewHashProcessor(strings.ToLower(hashFunction))
 	if hashProcessor == nil {
 		fmt.Println("Hash Function Not Supported")
 		return
