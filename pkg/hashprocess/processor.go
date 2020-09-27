@@ -15,8 +15,7 @@ import (
 
 //HashProcessor implements HashProcessor
 type HashProcessor struct {
-	filepath string
-	hasher   hash.Hash
+	hasher hash.Hash
 }
 
 // NewHashProcessor creates a new instance of a HashProcessor
